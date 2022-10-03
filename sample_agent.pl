@@ -240,19 +240,35 @@ no_pit(X, Y):-
 
 % North
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+rotate_left(0, Orient) :-
+  Orient = 3. %Head West
 
+rotate_right(0, Orient) :-
+  Orient = 1. %Head East
 
 % East
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+rotate_left(1, Orient) :-
+  Orient = 0. %Head North
 
+rotate_right(1, Orient) :-
+  Orient = 2. %Head South
 
 % South
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+rotate_left(2, Orient) :-
+  Orient = 1. %Head East
 
+rotate_right(2, Orient) :-
+  Orient = 3. %Head West
 
 % West
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+rotate_left(3, Orient) :-
+  Orient = 2. %Head South
 
+rotate_right(3, Orient) :-
+  Orient = 0. %Head North
 
 % Look at what our step would be
 %%%%%%%%%% Your Code Here %%%%%%%%%%
