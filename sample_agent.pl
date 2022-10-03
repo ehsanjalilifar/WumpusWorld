@@ -92,6 +92,13 @@ track_stench(_, no):-
 % track_breeze(Past, Breeze).
 % Breeze
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+track_breeze(_, yes):-
+  agent_loc(X, Y),
+  assert(has_breeze(X, Y)).
+% No stench
+track_breeze(_, no):-
+  agent_loc(X, Y),
+  assert(no_breeze(X, Y)).
 
 
 % track_glitter(Past, Glitter).
