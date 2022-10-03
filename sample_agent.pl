@@ -272,7 +272,28 @@ rotate_right(3, Orient) :-
 
 % Look at what our step would be
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+% Make decisiion based on the agent orientation
+% step_forward(X, Y, Orient, X1, Y1) 
 
+% Orient = North
+step_forward(X, Y, 0, X1, Y1) :-
+  X1 = X,
+  Y1 = Y + 1.
+
+% Orient = East
+step_forward(X, Y, 1, X1, Y1) :-
+  X1 = X + 1,
+  Y1 = Y.
+
+% Orient = South
+step_forward(X, Y, 2, X1, Y1) :-
+  X1 = X,
+  Y1 = Y - 1.
+
+% Orient = West
+step_forward(X, Y, 3, X1, Y1) :-
+  X1 = X - 1,
+  Y1 = Y.
 
 % We can't move anywhere :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
