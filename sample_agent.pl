@@ -270,7 +270,20 @@ has_wumpus(X, Y) :-
 
 % If there is a stench on either side of X, Y, then the wumpus must be there
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+has_wumpus(X, Y) :-
+  XRight #= X+1,
+  XLeft #= X-1,
+  YUp #= Y+1,
+  YDown #= Y-1,
+  (
+    has_stench(XLeft, Y),
+    has_stench(XRight, Y)
+  );
+  (
+    has_stench(X, YUp),
+    has_stench(X, YDown)
+  )
+.
 
 % A cell has no pit if there''s no breeze in at least
 % one of its adjacent squares
