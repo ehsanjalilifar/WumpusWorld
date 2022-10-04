@@ -319,18 +319,18 @@ maybe_pit(X, Y) :-
 
 % A pit is surrounded by breezes or against a wall
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-maybe_pit(X, Y) :-
-  not(has_pit(X, Y)),
+has_pit(X, Y) :-
   XUp #= X+1,
   XDown #= X-1,
   YRight #= Y+1,
   YLeft #= Y-1,
   (
-    has_pit(XUp, Y);
-    has_pit(XDown, Y);
-    has_pit(X, YRight);
-    has_pit(X, YLeft)
-  ).
+    (has_breeze(XUp, Y); wall(XUp, Y)),
+    (has_breeze(XDown, Y); wall(XDown, Y)),
+    (has_breeze(X, YRight); wall(X, YRight)),
+    (has_breeze(X, YLeft); wall(X, YLeft))
+  )
+.
 
 % Check if the arrow hit a point
 % We can assume the arrow also hits the point
