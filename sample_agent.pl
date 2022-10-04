@@ -40,26 +40,26 @@
 % -- rich: "yes" if agent has gold, otherwise "no".
 % -- arrow: "yes" if agent has arrow, otherwise "no".
 % -- past: Past action taken by agent.
-% -- killer: "yes" if we've killed the wumpus, otherwise "no".
+% -- killer: "yes" if we''ve killed the wumpus, otherwise "no".
 % -- shot_origin: (X, Y) of arrow shot location
 % -- shot_angle: A of arrow shot angle
 
 %% Board Variable Descriptions
-% -- safe: (X, Y) where we KNOW it's safe to step on.
+% -- safe: (X, Y) where we KNOW it''s safe to step on.
 % -- wall: (X, Y) where we KNOW there is a wall (out of bounds).
 % -- has_stench: (X, Y) where we noticed a stench
 % -- has_breeze: (X, Y) where we noticed a breeze
-% -- no_stench: (X, Y) where we KNOW there's no stench.
-% -- no_breeze: (X, Y) where we KNOW there's no breeze.
+% -- no_stench: (X, Y) where we KNOW there''s no stench.
+% -- no_breeze: (X, Y) where we KNOW there''s no breeze.
 % -- has_wumpus: (X, Y) where we KNOW the wumpus is.
 % -- has_pit: (X, Y) where we KNOW a pit is.
 % -- has_glitter: (X, Y) where we KNOW glitter is
-% -- no_glitter: (X, Y) where we KNOw there's no glitter
-% -- no_wumpus: (X, Y) where we KNOW there's no wumpus
-% -- no_pit: (X, Y) where we KNOW there's no pit
+% -- no_glitter: (X, Y) where we KNOw there''s no glitter
+% -- no_wumpus: (X, Y) where we KNOW there''s no wumpus
+% -- no_pit: (X, Y) where we KNOW there''s no pit
 % -- maybe_wumpus: (X, Y) where a wumpus COULD be (based on stench)
 % -- maybe_pit: (X, Y) where a pit COULD be (based on breeze)
-% -- seen: (X, Y) where we've been to a space before (prioritize going to unseen spaces)
+% -- seen: (X, Y) where we''ve been to a space before (prioritize going to unseen spaces)
 % -- path: Path of actions that bring us back to the entrance (in reverse order)
 
 %% Tracking Percepts
@@ -106,7 +106,7 @@ track_breeze(_, no):-
 track_glitter(_, yes):-
   agent_loc(X, Y),
   assert(has_glitter(X, Y)).
-% We took the glitter, we're rich!
+% We took the glitter, we''re rich!
 track_glitter(grab, no):-
   agent_loc(X, Y),
   retract(has_glitter(X, Y)),
@@ -119,7 +119,7 @@ track_glitter(_, no):-
 
 
 % track_bump(Action, Bump).
-% Don't move, mark wall
+% Don''t move, mark wall
 track_movement(goforward, yes):-
   agent_loc(X, Y),
   agent_orient(A),
@@ -138,27 +138,41 @@ track_movement(goforward, no):-
   retract(path(P)),
   append([turnleft, turnleft, goforward], P, NewP),
   assert(path(NewP)).
-% Do nothing (we didn't move forward)
+% Do nothing (we didn''t move forward)
 track_movement(_, _).
 
 
-% track_rotate(Past).
+% track_rotate(Past). -> Update the agent orientation
 % No associated percept with this
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+track_rotate(turnleft) :-
+  agent_orient(A),
+  rotate_left(A, Orient),
+  retract(agent_orient(A)),
+  assert(agent_orient(Orient))
+.
 
+track_rotate(turnright) :-
+  agent_orient(A),
+  rotate_right(A, Orient),
+  retract(agent_orient(A)),
+  assert(agent_orient(Orient))
+.
+
+track_rotate(_). % No rotation was happend
 
 % track_scream(Past, Scream).
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
 %% Our logical rules based on our Percepts
-% A cell is safe if there's no wumpus or pit there
+% A cell is safe if there''s no wumpus or pit there
 safe(X, Y):-
   no_wumpus(X, Y),
   no_pit(X, Y).
 
 
-% A cell has no wumpus if there's no stench in at least
+% A cell has no wumpus if there''s no stench in at least
 % one of its adjacent squares
 % Note that we need #= instead of is because of 
 % https://stackoverflow.com/questions/23815952/prolog-arguments-are-not-sufficiently-instantiated
@@ -173,12 +187,12 @@ no_wumpus(X, Y):-
     no_stench(X, YRight);
     no_stench(X, YLeft)
   ).
-% Wumpus can't be alive if we've killed it
+% Wumpus can''t be alive if we''ve killed it
 no_wumpus(_, _):-
   killer(yes).
 
 
-% A cell might have a wumpus if we don't know if there's a wumpus
+% A cell might have a wumpus if we don''t know if there''s a wumpus
 % there and one of the adjacent squares has a stench
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
@@ -187,7 +201,7 @@ no_wumpus(_, _):-
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If X, Y has two adjacent stenchs, but its diagonal doesn't have a wumpus,
+% If X, Y has two adjacent stenchs, but its diagonal doesn''t have a wumpus,
 % then X, Y must have the wumpus
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
@@ -196,7 +210,7 @@ no_wumpus(_, _):-
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% A cell has no pit if there's no breeze in at least
+% A cell has no pit if there''s no breeze in at least
 % one of its adjacent squares
 no_pit(X, Y):-
   XUp #= X+1,
@@ -272,7 +286,7 @@ rotate_right(3, Orient) :-
 
 % Look at what our step would be
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-% Make decisiion based on the agent orientation
+% Make decision based on the agent orientation
 % step_forward(X, Y, Orient, X1, Y1) 
 
 % Orient = North
@@ -295,7 +309,7 @@ step_forward(X, Y, 3, X1, Y1) :-
   X1 = X - 1,
   Y1 = Y.
 
-% We can't move anywhere :(
+% We can''t move anywhere :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
@@ -305,19 +319,19 @@ step_forward(X, Y, 3, X1, Y1) :-
 
 %% Action deciders
 % Note that we only need Action since
-% we've already updated our knowledge base
+% we''ve already updated our knowledge base
 % Actions are:
 % goforward, turnleft, turnright, grab, shoot, climb
 
 
-% If we're on the gold, grab it!
+% If we''re on the gold, grab it!
 get_action(Action):-
   agent_loc(X, Y),
   has_glitter(X, Y),
   Action=grab.
 
 
-% If we have at least one gold and we're at the
+% If we have at least one gold and we''re at the
 % entrance, climb!
 get_action(Action):-
   rich(yes),
@@ -336,7 +350,7 @@ get_action(Action):-
   Action=climb.
 
 
-% If there's nowhere left to explore, go home
+% If there''s nowhere left to explore, go home
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
@@ -348,11 +362,11 @@ get_action(Action):-
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If we're facing the wumpus, fire!
+% If we''re facing the wumpus, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If we're next to the wumpus and we have the arrow, face it!
+% If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
@@ -361,25 +375,25 @@ get_action(Action):-
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If we're stuck and facing where a wumpus might be, fire!
+% If we''re stuck and facing where a wumpus might be, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If we're stuck and out of ammo, we might've missed the wumpus, just leave :(
+% If we''re stuck and out of ammo, we might''ve missed the wumpus, just leave :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If we're stuck and out of ammo, we might be surrounded by pits, just leave :(
+% If we''re stuck and out of ammo, we might be surrounded by pits, just leave :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If forward isn't safe or there's a wall,
-% look to the left. If its safe and there's no wall,
+% If forward isn''t safe or there''s a wall,
+% look to the left. If its safe and there''s no wall,
 % rotate left
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% If there's literally nothing else to do, rotate right.
+% If there''s literally nothing else to do, rotate right.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 % Reset some variables
