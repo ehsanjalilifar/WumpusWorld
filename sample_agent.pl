@@ -211,12 +211,62 @@ maybe_wumpus(X, Y) :-
 
 % A wumpus is surrounded by at least 3 stenches or against a wall/pit
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+has_wumpus(X, Y) :-
+  XUp #= X+1,
+  XDown #= X-1,
+  YRight #= Y+1,
+  YLeft #= Y-1,
+  (
+    has_stench(XUp, Y),
+    has_stench(XDown, Y),
+    has_stench(X, YRight),
+  );
+  (
+    has_stench(XUp, Y),
+    has_stench(XDown, Y),
+    has_stench(X, YLeft)
+  );
+  (
+    has_stench(XUp, Y),
+    has_stench(X, YRight),
+    has_stench(X, YLeft)
+  );
+  (
+    has_stench(XDown, Y),
+    has_stench(X, YRight),
+    has_stench(X, YLeft)
+  )
+.
 
 % If X, Y has two adjacent stenchs, but its diagonal doesn''t have a wumpus,
 % then X, Y must have the wumpus
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+has_wumpus(X, Y) :-
+  XRight #= X+1,
+  XLeft #= X-1,
+  YUp #= Y+1,
+  YDown #= Y-1,
+  (
+    has_stench(XLeft, Y),
+    has_stench(X, YUp),
+    no_stench(XLeft, YUp)
+  );
+  (
+    has_stench(XRight, Y),
+    has_stench(X, YUp),
+    no_stench(XRight, YUp)
+  );
+  (
+    has_stench(XRight, Y),
+    has_stench(X, YDown),
+    no_stench(XRight, YDown)
+  );
+  (
+    has_stench(XLeft, Y),
+    has_stench(X, YDown),
+    no_stench(XLeft, YDown)
+  )
+.
 
 % If there is a stench on either side of X, Y, then the wumpus must be there
 %%%%%%%%%% Your Code Here %%%%%%%%%%
