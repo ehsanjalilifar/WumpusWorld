@@ -337,12 +337,32 @@ has_pit(X, Y) :-
 % it was shot from
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 % Angle 0 (North): Y must match and X >= XOrigin
+hit_point(0, X, Y) :- 
+  shot_origin(X0, Y0),
+  Y =:= Y0,
+  X >= X0
+.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 % Angle 1 (East): X must match and Y >= YOrigin
+hit_point(1, X, Y) :- 
+  shot_origin(X0, Y0),
+  X =:= X0,
+  Y >= Y0
+.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 % Angle 2 (South): Y must match and X =< XOrigin
+hit_point(2, X, Y) :- 
+  shot_origin(X0, Y0),
+  Y =:= Y0,
+  X =< X0
+.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 % Angle 3 (West): X must match and Y =< YOrigin
+hit_point(3, X, Y) :- 
+  shot_origin(X0, Y0),
+  X =:= X0,
+  Y =< Y0
+.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
