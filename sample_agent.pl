@@ -159,7 +159,7 @@ track_rotate(turnright) :-
   assert(agent_orient(Orient))
 .
 
-track_rotate(_). % No rotation was happend
+track_rotate(_). % No rotation was happened
 
 % track_scream(Past, Scream).
 %%%%%%%%%% Your Code Here %%%%%%%%%%
@@ -195,7 +195,19 @@ no_wumpus(_, _):-
 % A cell might have a wumpus if we don''t know if there''s a wumpus
 % there and one of the adjacent squares has a stench
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+maybe_wumpus(X, Y) :-
+  not(no_wumpus(X, Y)),  % Double check the 'not' implementation
+  XUp #= X+1,
+  XDown #= X-1,
+  YRight #= Y+1,
+  YLeft #= Y-1,
+  (
+    has_stench(XUp, Y);
+    has_stench(XDown, Y);
+    has_stench(X, YRight);
+    has_stench(X, YLeft)
+  )
+.
 
 % A wumpus is surrounded by at least 3 stenches or against a wall/pit
 %%%%%%%%%% Your Code Here %%%%%%%%%%
