@@ -303,7 +303,20 @@ no_pit(X, Y):-
 % A cell might have a pit if we don't know if there's a pit
 % there and one of the adjacent squares has a breeze
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+maybe_pit(X, Y) :-
+  not(has_pit(X, Y)),
+  XUp #= X+1,
+  XDown #= X-1,
+  YRight #= Y+1,
+  YLeft #= Y-1,
+  (
+    has_pit(XUp, Y);
+    has_pit(XDown, Y);
+    has_pit(X, YRight);
+    has_pit(X, YLeft)
+  ).
 
+.
 
 % A pit is surrounded by breezes or against a wall
 %%%%%%%%%% Your Code Here %%%%%%%%%%
