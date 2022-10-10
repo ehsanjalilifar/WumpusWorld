@@ -164,6 +164,11 @@ track_rotate(_). % No rotation was happened
 % track_scream(Past, Scream).
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
+track_scream(_, yes) :-
+  assert(killer(yes))
+.
+
+track_scream(_, _).
 
 %% Our logical rules based on our Percepts
 % A cell is safe if there''s no wumpus or pit there
