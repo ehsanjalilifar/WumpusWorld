@@ -165,6 +165,7 @@ track_rotate(_). % No rotation was happened
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 track_scream(_, yes) :-
+  retract(killer(no))
   assert(killer(yes))
 .
 
@@ -175,7 +176,6 @@ track_scream(_, _).
 safe(X, Y):-
   no_wumpus(X, Y),
   no_pit(X, Y).
-
 
 % A cell has no wumpus if there''s no stench in at least
 % one of its adjacent squares
@@ -222,24 +222,24 @@ has_wumpus(X, Y) :-
   YRight #= Y+1,
   YLeft #= Y-1,
   (
-    has_stench(XUp, Y),
-    has_stench(XDown, Y),
-    has_stench(X, YRight),
+    (has_stench(XUp, Y); has_pit(XUp, Y); wall(XUp, Y)),
+    (has_stench(XDown, Y); has_pit(XDown, Y); wall(XDown, Y)),
+    (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight);),
   );
   (
-    has_stench(XUp, Y),
-    has_stench(XDown, Y),
-    has_stench(X, YLeft)
+    (has_stench(XUp, Y); has_pit(XUp, Y); wall(XUp, Y)),
+    (has_stench(XDown, Y); has_pit(XDown, Y); wall(XDown, Y)),
+    (has_stench(X, YLeft); has_pit(X, YLeft); wall(X, YLeft))
   );
   (
-    has_stench(XUp, Y),
-    has_stench(X, YRight),
-    has_stench(X, YLeft)
+    (has_stench(XUp, Y); has_pit(XUp, Y); wall(XUp, Y)),
+    (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight)),
+    (has_stench(X, YLeft); has_pit(X, YLeft); wall(X, YLeft))
   );
   (
-    has_stench(XDown, Y),
-    has_stench(X, YRight),
-    has_stench(X, YLeft)
+    (has_stench(XDown, Y); has_pit(XDown, Y); wall(XDown, Y)),
+    (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight)),
+    (has_stench(X, YLeft); has_pit(X, YLeft); wall(X, YLeft))
   )
 .
 
