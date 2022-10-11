@@ -414,23 +414,23 @@ rotate_right(3, Orient) :-
 
 % Orient = North
 step_forward(X, Y, 0, X1, Y1) :-
-  X1 = X,
-  Y1 = Y + 1.
-
-% Orient = East
-step_forward(X, Y, 1, X1, Y1) :-
   X1 = X + 1,
   Y1 = Y.
 
-% Orient = South
-step_forward(X, Y, 2, X1, Y1) :-
+% Orient = East
+step_forward(X, Y, 1, X1, Y1) :-
   X1 = X,
   Y1 = Y - 1.
 
-% Orient = West
-step_forward(X, Y, 3, X1, Y1) :-
+% Orient = South
+step_forward(X, Y, 2, X1, Y1) :-
   X1 = X - 1,
   Y1 = Y.
+
+% Orient = West
+step_forward(X, Y, 3, X1, Y1) :-
+  X1 = X,
+  Y1 = Y + 1.
 
 % We can''t move anywhere :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
