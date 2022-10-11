@@ -523,7 +523,25 @@ get_action(Action) :-
 
 % If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+get_action(Action) :-
+  arrow(yes),
+  agent_loc(X, Y),
+  agent_orient(A),
+  rotate_left(A, Orient),
+  step_forward(X, Y, Orient, X1, Y1),
+  has_wumpus(X1, Y1),
+  Action=turnleft
+.
 
+get_action(Action) :-
+  arrow(yes),
+  agent_loc(X, Y),
+  agent_orient(A),
+  rotate_right(A, Orient),
+  step_forward(X, Y, Orient, X1, Y1),
+  has_wumpus(X1, Y1),
+  Action=turnright
+.
 
 % No new spot to explore and no wumpus to kill, Move forward if we can do so safely
 % and without bumping a wall
