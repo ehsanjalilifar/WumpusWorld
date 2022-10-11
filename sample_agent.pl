@@ -500,6 +500,16 @@ get_action(Action) :-
   Action=turnleft
 .
 
+get_action(Action) :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  rotate_right(A, Orient),
+  step_forward(X, Y, Orient, X1, Y1),
+  not(seen(X1, Y1)),
+  safe(X1, Y1),
+  Action=turnright
+.
+
 % If we''re facing the wumpus, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
