@@ -479,7 +479,14 @@ get_action(Action):-
 
 % Move forward to an unexplored space
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+get_action(Action) :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  step_forward(X, Y, A, X1, Y1),
+  not(seen(X1, Y1)),
+  safe(X1, Y1),
+  Action=forward
+.
 
 % Turn towards unexplored space
 %%%%%%%%%% Your Code Here %%%%%%%%%%
