@@ -512,7 +512,14 @@ get_action(Action) :-
 
 % If we''re facing the wumpus, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+get_action(Action) :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  step_forward(X, Y, A, X1, Y1),
+  has_wumpus(X1, Y1),
+  arrow(yes),
+  Action=shoot
+.
 
 % If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
