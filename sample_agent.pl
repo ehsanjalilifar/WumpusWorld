@@ -165,7 +165,7 @@ track_rotate(_). % No rotation was happened
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 track_scream(_, yes) :-
-  retract(killer(no))
+  retract(killer(no)),
   assert(killer(yes))
 .
 
@@ -221,10 +221,10 @@ has_wumpus(X, Y) :-
   XDown #= X-1,
   YRight #= Y+1,
   YLeft #= Y-1,
-  (
+  ((
     (has_stench(XUp, Y); has_pit(XUp, Y); wall(XUp, Y)),
     (has_stench(XDown, Y); has_pit(XDown, Y); wall(XDown, Y)),
-    (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight);),
+    (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight))
   );
   (
     (has_stench(XUp, Y); has_pit(XUp, Y); wall(XUp, Y)),
@@ -240,7 +240,7 @@ has_wumpus(X, Y) :-
     (has_stench(XDown, Y); has_pit(XDown, Y); wall(XDown, Y)),
     (has_stench(X, YRight); has_pit(X, YRight); wall(X, YRight)),
     (has_stench(X, YLeft); has_pit(X, YLeft); wall(X, YLeft))
-  )
+  ))
 .
 
 % If X, Y has two adjacent stenchs, but its diagonal doesn''t have a wumpus,
@@ -251,7 +251,7 @@ has_wumpus(X, Y) :-
   XLeft #= X-1,
   YUp #= Y+1,
   YDown #= Y-1,
-  (
+  ((
     has_stench(XLeft, Y),
     has_stench(X, YUp),
     no_stench(XLeft, YUp)
@@ -270,7 +270,7 @@ has_wumpus(X, Y) :-
     has_stench(XLeft, Y),
     has_stench(X, YDown),
     no_stench(XLeft, YDown)
-  )
+  ))
 .
 
 % If there is a stench on either side of X, Y, then the wumpus must be there
@@ -280,14 +280,14 @@ has_wumpus(X, Y) :-
   XLeft #= X-1,
   YUp #= Y+1,
   YDown #= Y-1,
-  (
+  ((
     has_stench(XLeft, Y),
     has_stench(XRight, Y)
   );
   (
     has_stench(X, YUp),
     has_stench(X, YDown)
-  )
+  ))
 .
 
 % A cell has no pit if there''s no breeze in at least
@@ -373,39 +373,38 @@ hit_point(3, X, Y) :-
 
 % Calculate rotations
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
-
+% ROTATE LEFT
 % North
-%%%%%%%%%% Your Code Here %%%%%%%%%%
 rotate_left(0, Orient) :-
-  Orient = 3. %Head West
-
-rotate_right(0, Orient) :-
-  Orient = 1. %Head East
-
+  Orient=3. %Head West
 % East
-%%%%%%%%%% Your Code Here %%%%%%%%%%
 rotate_left(1, Orient) :-
-  Orient = 0. %Head North
-
-rotate_right(1, Orient) :-
-  Orient = 2. %Head South
+  Orient=0. %Head North
 
 % South
-%%%%%%%%%% Your Code Here %%%%%%%%%%
 rotate_left(2, Orient) :-
-  Orient = 1. %Head East
-
-rotate_right(2, Orient) :-
-  Orient = 3. %Head West
+  Orient=1. %Head East
 
 % West
-%%%%%%%%%% Your Code Here %%%%%%%%%%
 rotate_left(3, Orient) :-
-  Orient = 2. %Head South
+  Orient=2. %Head South
 
+% ROTATE RIGHT
+% North
+rotate_right(0, Orient) :-
+  Orient=1. %Head East
+
+% East
+rotate_right(1, Orient) :-
+  Orient=2. %Head South
+
+% South
+rotate_right(2, Orient) :-
+  Orient=3. %Head West
+
+% West
 rotate_right(3, Orient) :-
-  Orient = 0. %Head North
+  Orient=0. %Head North
 
 % Look at what our step would be
 %%%%%%%%%% Your Code Here %%%%%%%%%%
@@ -451,7 +450,9 @@ step_forward(X, Y, 3, X1, Y1) :-
 get_action(Action):-
   agent_loc(X, Y),
   has_glitter(X, Y),
-  Action=grab.
+  Action=grab,
+  format('\naction is grab')
+.
 
 
 % If we have at least one gold and we''re at the
@@ -465,12 +466,13 @@ get_action(Action):-
 
 
 % If nowhere left to go, climb
-get_action(Action):-
+/* get_action(Action):-
   all_explored,
   agent_loc(X, Y),
   X =:= 1,
   Y =:= 1,
-  Action=climb.
+  Action=climb. 
+*/
 
 
 % If there''s nowhere left to explore, go home
@@ -485,7 +487,8 @@ get_action(Action) :-
   step_forward(X, Y, A, X1, Y1),
   not(seen(X1, Y1)),
   safe(X1, Y1),
-  Action=forward
+  Action=goforward,
+  format('\naction is goforward')
 .
 
 % Turn towards unexplored space
@@ -497,7 +500,8 @@ get_action(Action) :-
   step_forward(X, Y, Orient, X1, Y1),
   not(seen(X1, Y1)),
   safe(X1, Y1),
-  Action=turnleft
+  Action=turnleft,
+  format('\naction is turnleft')
 .
 
 get_action(Action) :-
@@ -507,7 +511,8 @@ get_action(Action) :-
   step_forward(X, Y, Orient, X1, Y1),
   not(seen(X1, Y1)),
   safe(X1, Y1),
-  Action=turnright
+  Action=turnright,
+  format('\naction is turnright')
 .
 
 % If we''re facing the wumpus, fire!
@@ -518,7 +523,8 @@ get_action(Action) :-
   step_forward(X, Y, A, X1, Y1),
   has_wumpus(X1, Y1),
   arrow(yes),
-  Action=shoot
+  Action=shoot,
+  format('\naction is shoot')
 .
 
 % If we''re next to the wumpus and we have the arrow, face it!
@@ -530,7 +536,8 @@ get_action(Action) :-
   rotate_left(A, Orient),
   step_forward(X, Y, Orient, X1, Y1),
   has_wumpus(X1, Y1),
-  Action=turnleft
+  Action=turnleft,
+  format('\naction is turnleft to face the wumpus')
 .
 
 get_action(Action) :-
@@ -540,7 +547,8 @@ get_action(Action) :-
   rotate_right(A, Orient),
   step_forward(X, Y, Orient, X1, Y1),
   has_wumpus(X1, Y1),
-  Action=turnright
+  Action=turnright,
+  format('\naction is turnright to face the wumpus')
 .
 
 % No new spot to explore and no wumpus to kill, Move forward if we can do so safely
@@ -568,6 +576,10 @@ get_action(Action) :-
 
 % If there''s literally nothing else to do, rotate right.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
+get_action(Action) :-
+  Action=turnright,
+  format('\nThere is no other option else turnright')
+.
 
 % Reset some variables
 reset:-
@@ -608,8 +620,13 @@ run_agent(Percepts, Action):-
   %sleep(1),
   past(P),
   track_percepts(P, Percepts),
+  format('\npercepts were updated'),
   get_action(H),
+  format('\nget_action was called'),
   retract(past(P)),
+  format('\npast action was retracted'),
   assert(past(H)),
+  format('\nnew action was asserted'),
+  display_world,
   Action=H.
 
