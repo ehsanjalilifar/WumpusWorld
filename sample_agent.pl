@@ -149,14 +149,23 @@ track_rotate(turnleft) :-
   agent_orient(A),
   rotate_left(A, Orient),
   retract(agent_orient(A)),
-  assert(agent_orient(Orient))
+  assert(agent_orient(Orient)),
+  path(P), % Track path return
+  retract(path(P)),
+  append([turnright], P, NewP),
+  assert(path(NewP))
 .
+% NEEDS TO UPDATE THE PATH!!!
 
 track_rotate(turnright) :-
   agent_orient(A),
   rotate_right(A, Orient),
   retract(agent_orient(A)),
-  assert(agent_orient(Orient))
+  assert(agent_orient(Orient)),
+  path(P), % Track path return
+  retract(path(P)),
+  append([turnleft], P, NewP),
+  assert(path(NewP))
 .
 
 track_rotate(_). % No rotation was happened
@@ -413,40 +422,49 @@ rotate_right(3, Orient) :-
 
 % Orient = North
 step_forward(X, Y, 0, X1, Y1) :-
-  X1 = X + 1,
-  Y1 = Y.
+  X1 #= (X + 1),
+  Y1 #= Y.
 
 % Orient = East
 step_forward(X, Y, 1, X1, Y1) :-
-  X1 = X,
-  Y1 = Y - 1.
+  X1 #= X,
+  Y1 #= (Y + 1).
 
 % Orient = South
 step_forward(X, Y, 2, X1, Y1) :-
-  X1 = X - 1,
-  Y1 = Y.
+  X1 #= (X - 1),
+  Y1 #= Y.
 
 % Orient = West
 step_forward(X, Y, 3, X1, Y1) :-
-  X1 = X,
-  Y1 = Y + 1.
+  X1 #= X,
+  Y1 #= (Y - 1).
 
 % We can''t move anywhere :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 is_stuck() :-
   agent_loc(X, Y),
   agent_orient(A),
-  % forward is not safe
+  % forward is not safe or is wall
   step_forward(X, Y, A, X1, Y1),
-  not(safe(X1, Y1)),
-  % left is not safe
+  (
+    not(safe(X1, Y1));
+    wall(X1, Y1)
+  ),
+  % left is not safe or is a wall
   rotate_left(A, Orient1),
   step_forward(X, Y, Orient1, X2, Y2),
-  not(safe(X2, Y2)),
-  % right is not safe
+  (
+    not(safe(X2, Y2));
+    wall(X2, Y2)
+  ),
+  % right is not safe or is a wall
   rotate_right(A, Orient2),
   step_forward(X, Y, Orient2, X3, Y3),
-  not(safe(X3, Y3))
+  (
+    not(safe(X3, Y3));
+    wall(X3, Y3)
+  )
 .
 
 % If number of safe and visited cells are equal
@@ -502,7 +520,7 @@ get_action(Action) :-
   not(seen(X1, Y1)),
   safe(X1, Y1),
   Action=goforward,
-  format('\naction is goforward')
+  format('\naction is goforward to a new spot')
 .
 
 % Turn towards unexplored space
@@ -515,7 +533,7 @@ get_action(Action) :-
   not(seen(X1, Y1)),
   safe(X1, Y1),
   Action=turnleft,
-  format('\naction is turnleft')
+  format('\naction is turnleft toward a new and safe spot')
 .
 
 get_action(Action) :-
@@ -526,12 +544,12 @@ get_action(Action) :-
   not(seen(X1, Y1)),
   safe(X1, Y1),
   Action=turnright,
-  format('\naction is turnright')
+  format('\naction is turnright toward a new and safe spot')
 .
 
 % If we''re facing the wumpus, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-get_action(Action) :-
+/*get_action(Action) :-
   agent_loc(X, Y),
   agent_orient(A),
   step_forward(X, Y, A, X1, Y1),
@@ -540,10 +558,10 @@ get_action(Action) :-
   Action=shoot,
   format('\naction is shoot')
 .
-
+*/
 % If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-get_action(Action) :-
+/*get_action(Action) :-
   arrow(yes),
   agent_loc(X, Y),
   agent_orient(A),
@@ -564,24 +582,35 @@ get_action(Action) :-
   Action=turnright,
   format('\naction is turnright to face the wumpus')
 .
-
+*/
 % No new spot to explore and no wumpus to kill, Move forward if we can do so safely
 % and without bumping a wall
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+get_action(Action) :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  step_forward(X, Y, A, X1, Y1),
+  format('\norient is ~I', [A]),
+  format('\nX is ~I and Y is ~I', [X, Y]),
+  format('\nX1 is ~I and Y1 is ~I', [X1, Y1]),
+  seen(X1, Y1),
+  not(wall(X1, Y1)),
+  Action=goforward,
+  format('\naction is goforward to a already seen spot')
+.
 
 % If we''re stuck and facing where a wumpus might be, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-get_action(Action) :-
+/*get_action(Action) :-
   arrow(yes),
   is_stuck(),
   agent_loc(X, Y),
   agent_orient(A),
   step_forward(X, Y, A, X1, Y1),
   maybe_wumpus(X1, Y1),
-  Action=shoot,
+  Action=shoot
 .
-
+*/
 % If we''re stuck and out of ammo, we might''ve missed the wumpus, just leave :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
@@ -607,16 +636,16 @@ get_action(Action) :-
   safe(X2, Y2),
   not(wall(X2, Y2)),
   Action=turnleft,
-  format('\nforward is not safe so turn left')
+  format('\nforward is not safe or is wall so turn left')
 .
 
 % If there''s literally nothing else to do, rotate right.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-/*get_action(Action) :-
+get_action(Action) :-
   Action=turnright,
   format('\nThere is no other option else turnright')
 .
-*/
+
 % Reset some variables
 reset:-
   retractall(agent_loc(_,_)),
