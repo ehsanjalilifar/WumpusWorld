@@ -479,7 +479,7 @@ get_action(Action):-
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 
 
-% Move forward to an unexplored space
+% Move forward to an unexplored space + safe space
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 get_action(Action) :-
   agent_loc(X, Y),
@@ -491,7 +491,7 @@ get_action(Action) :-
   format('\naction is goforward')
 .
 
-% Turn towards unexplored space
+% Turn towards unexplored space + safe space
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 get_action(Action) :-
   agent_loc(X, Y),
@@ -572,15 +572,29 @@ get_action(Action) :-
 % look to the left. If its safe and there''s no wall,
 % rotate left
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+get_action(Action) :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  step_forward(X, Y, A, X1, Y1),
+  (
+    not(safe(X1, Y1));
+    wall(X1, Y1)
+  ),
+  rotate_left(A, Orient),
+  step_forward(X, Y, Orient, X2, Y2),
+  safe(X2, Y2),
+  not(wall(X2, Y2)),
+  Action=turnleft,
+  format('\nforward is not safe so turn left')
+.
 
 % If there''s literally nothing else to do, rotate right.
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-get_action(Action) :-
+/*get_action(Action) :-
   Action=turnright,
   format('\nThere is no other option else turnright')
 .
-
+*/
 % Reset some variables
 reset:-
   retractall(agent_loc(_,_)),
@@ -627,6 +641,6 @@ run_agent(Percepts, Action):-
   format('\npast action was retracted'),
   assert(past(H)),
   format('\nnew action was asserted'),
-  display_world,
+  %display_world,
   Action=H.
 
