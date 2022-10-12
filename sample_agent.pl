@@ -433,7 +433,21 @@ step_forward(X, Y, 3, X1, Y1) :-
 
 % We can''t move anywhere :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+is_stuck() :-
+  agent_loc(X, Y),
+  agent_orient(A),
+  % forward is not safe
+  step_forward(X, Y, A, X1, Y1),
+  not(safe(X1, Y1)),
+  % left is not safe
+  rotate_left(A, Orient1),
+  step_forward(X, Y, Orient1, X2, Y2),
+  not(safe(X2, Y2)),
+  % right is not safe
+  rotate_right(A, Orient2),
+  step_forward(X, Y, Orient2, X3, Y3),
+  not(safe(X3, Y3))
+.
 
 % If number of safe and visited cells are equal
 %%%%%%%%%% Your Code Here %%%%%%%%%%
@@ -491,7 +505,7 @@ get_action(Action) :-
   format('\naction is goforward')
 .
 
-% Turn towards unexplored space + safe space
+% Turn towards unexplored space
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 get_action(Action) :-
   agent_loc(X, Y),
@@ -558,7 +572,15 @@ get_action(Action) :-
 
 % If we''re stuck and facing where a wumpus might be, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+get_action(Action) :-
+  arrow(yes),
+  is_stuck(),
+  agent_loc(X, Y),
+  agent_orient(A),
+  step_forward(X, Y, A, X1, Y1),
+  maybe_wumpus(X1, Y1),
+  Action=shoot,
+.
 
 % If we''re stuck and out of ammo, we might''ve missed the wumpus, just leave :(
 %%%%%%%%%% Your Code Here %%%%%%%%%%
