@@ -469,7 +469,15 @@ is_stuck() :-
 
 % If number of safe and visited cells are equal
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-
+is_safe_visited_equal() :-
+  findall([X1, Y1], safe(X1, Y1), SafeList),
+  length(SafeList, SafeLength),
+  format('\nnumber of safe spots'),
+  findall([X2, Y2], seen(X2, Y2), VisitedList),
+  length(VisitedList, VisitedLength),
+  format('\nnumber of visited spots'),
+  VisitedLength =:= SafeLength
+.
 
 %% Action deciders
 % Note that we only need Action since
@@ -549,16 +557,17 @@ get_action(Action) :-
 
 % If we''re facing the wumpus, fire!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-/*get_action(Action) :-
+get_action(Action) :-
   agent_loc(X, Y),
   agent_orient(A),
   step_forward(X, Y, A, X1, Y1),
   has_wumpus(X1, Y1),
   arrow(yes),
+  killer(no),
   Action=shoot,
-  format('\naction is shoot')
+  format('\nfacing the wumpus so action is shoot')
 .
-*/
+
 % If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
 /*get_action(Action) :-

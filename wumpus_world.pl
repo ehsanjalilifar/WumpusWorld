@@ -167,7 +167,42 @@ initialize(World,[Stench,Breeze,Glitter,no,no]) :-
 % pit(X,Y): there is a pit in square X,Y
 
 initialize_world(fig72) :-
+  /*
   ww_retractall,
+  retractall(ww_initial_state(_)),
+  assert(ww_initial_state([])),
+  addto_ww_init_state(wumpus_world_extent(2)),
+  addto_ww_init_state(gold(1,1)),
+  ww_initial_state(L),
+  assert_list(L).
+  */
+  
+  % map2
+  /*
+  ww_retractall,
+  retractall(ww_initial_state(_)),
+  assert(ww_initial_state([])),
+  addto_ww_init_state(wumpus_world_extent(4)),
+  addto_ww_init_state(wumpus_location(4,4)),
+  addto_ww_init_state(wumpus_health(alive)),
+  addto_ww_init_state(gold(2,2)),
+  ww_initial_state(L),
+  assert_list(L).
+  */
+
+  % map3
+  /* ww_retractall,
+  retractall(ww_initial_state(_)),
+  assert(ww_initial_state([])),
+  addto_ww_init_state(wumpus_world_extent(4)),
+  addto_ww_init_state(wumpus_location(2,2)),
+  addto_ww_init_state(wumpus_health(alive)),
+  addto_ww_init_state(gold(3,1)),
+  ww_initial_state(L),
+  assert_list(L).
+  */
+  
+  /*ww_retractall,
   retractall(ww_initial_state(_)),
   assert(ww_initial_state([])),
   addto_ww_init_state(wumpus_world_extent(4)),
@@ -179,6 +214,7 @@ initialize_world(fig72) :-
   addto_ww_init_state(pit(4,4)),
   ww_initial_state(L),
   assert_list(L).
+  */
 
 initialize_world(random) :-
   ww_retractall,
