@@ -506,7 +506,7 @@ get_action(Action):-
 
 
 % If nowhere left to go, climb
-/* get_action(Action):-
+/*get_action(Action):-
   all_explored,
   agent_loc(X, Y),
   X =:= 1,
@@ -570,8 +570,9 @@ get_action(Action) :-
 
 % If we''re next to the wumpus and we have the arrow, face it!
 %%%%%%%%%% Your Code Here %%%%%%%%%%
-/*get_action(Action) :-
+get_action(Action) :-
   arrow(yes),
+  killer(no),
   agent_loc(X, Y),
   agent_orient(A),
   rotate_left(A, Orient),
@@ -583,6 +584,7 @@ get_action(Action) :-
 
 get_action(Action) :-
   arrow(yes),
+  killer(no),
   agent_loc(X, Y),
   agent_orient(A),
   rotate_right(A, Orient),
@@ -591,7 +593,7 @@ get_action(Action) :-
   Action=turnright,
   format('\naction is turnright to face the wumpus')
 .
-*/
+
 % No new spot to explore and no wumpus to kill, Move forward if we can do so safely
 % and without bumping a wall
 %%%%%%%%%% Your Code Here %%%%%%%%%%
